@@ -84,3 +84,7 @@ npm install -g gatsby
 ```bash
 gatsby new-coronavirus-map https://github.com/colbyfayock/gatsby-starter-leaflet
 ```
+### Start Development Server
+```bash
+yarn develop
+```
