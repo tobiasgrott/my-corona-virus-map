@@ -17,30 +17,29 @@ const CENTER = [LOCATION.lat, LOCATION.lng];
 const DEFAULT_ZOOM = 2;
 
 const IndexPage = () => {
-  
   /**
    * mapEffect
    * @description Fires a callback once the page renders
    * @example Here this is and example of being used to zoom in and set a popup on load
    */
 
-  async function mapEffect({ leafletElement : map} = {}) {
+  async function mapEffect({ leafletElement: map } = {}) {
     let response;
     try {
-      response = await axios.get('https://corona.lmao.ninja/v2/countries');
-    }catch(e){
-      console.log(`Failed to fetch countries: ${e.message}`,e);
+      response = await axios.get( 'https://corona.lmao.ninja/v2/countries' );
+    } catch ( e ) {
+      console.log( `Failed to fetch countries: ${e.message}`, e );
       return;
     }
-    const { data=[] } = response;
-    const hasData = Array.isArray(data) && data.length > 0;
+    const { data = [] } = response;
+    const hasData = Array.isArray( data ) && data.length > 0;
 
-    if ( ! hasData ) return;
+    if ( !hasData ) return;
 
     const geoJson = {
       type: 'FeatureCollection',
-      features: data.map((country = {})=>{
-        const { countryInfo =  {} } = country;
+      features: data.map(( country = {}) => {
+        const { countryInfo = {} } = country;
         const { lat, long: lng } = countryInfo;
         return {
           type: 'Feature',
@@ -49,31 +48,24 @@ const IndexPage = () => {
           },
           geometry: {
             type: 'Point',
-            coordinates: [lng, lat]
-          }
-        }
-      }
-      )
+            coordinates: [lng, lat],
+          },
+        };
+      }),
     };
-    const geoJsonLayers = new L.GeoJSON(geoJson, {
-      pointToLayer: (feature = {}, latlng) => {
-        const { properties =  {} } = feature;
+    const geoJsonLayers = new L.GeoJSON( geoJson, {
+      pointToLayer: ( feature = {}, latlng ) => {
+        const { properties = {} } = feature;
         let updatedFormatted;
         let casesString;
 
-        const {
-          country,
-          updated,
-          cases,
-          deaths,
-          recovered
-        } = properties
+        const { country, updated, cases, deaths, recovered } = properties;
         casesString = `${cases}`;
-        if ( cases > 1000 ){
-          casesString = `${casesString.slice(0, -3)}k+`
+        if ( cases > 1000 ) {
+          casesString = `${casesString.slice( 0, -3 )}k+`;
         }
         if ( updated ) {
-          updatedFormatted = new Date(updated).toLocaleString();
+          updatedFormatted = new Date( updated ).toLocaleString();
         }
 
         const html = `
@@ -81,7 +73,7 @@ const IndexPage = () => {
             <span class="icon-marker-tooltip">
               <h2>${country}</h2>
               <ul>
-                <li><strong>Confirmed:</strong> ${cases}</li>
+                <li><strong>Confirmed:</strong> ${casesString}</li>
                 <li><strong>Deaths:</strong> ${deaths}</li>
                 <li><strong>Recovered:</strong> ${recovered}</li>
                 <li><strong>Last Update:</strong> ${updatedFormatted}</li>
@@ -92,13 +84,13 @@ const IndexPage = () => {
         return L.marker( latlng, {
           icon: L.divIcon({
             className: 'icon',
-            html
+            html,
           }),
-          riseOnHover: true
+          riseOnHover: true,
         });
-      }
+      },
     });
-    geoJsonLayers.addTo(map);
+    geoJsonLayers.addTo( map );
   }
 
   const mapSettings = {
@@ -114,8 +106,7 @@ const IndexPage = () => {
         <title>Home Page</title>
       </Helmet>
 
-      <Map {...mapSettings}>
-      </Map>
+      <Map {...mapSettings}></Map>
 
       <Container type="content" className="text-center home-start">
         <h2>Still Getting Started?</h2>
