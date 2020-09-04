@@ -88,3 +88,11 @@ gatsby new-coronavirus-map https://github.com/colbyfayock/gatsby-starter-leaflet
 ```bash
 yarn develop
 ```
+
+### Api Fetching
+
+#### Adding Axios
+```bash
+yarn add axios
+```
+
